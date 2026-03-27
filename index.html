@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Morro Vermelho | Do alto do morro direto para sua xícara</title>
+    <meta name="description" content="Café especial, mel puro e própolis artesanal produzidos com tradição no Morro Vermelho.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <!-- Tailwind CSS (CDN for standalone usage) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            dark: '#4E342E',
+                            DEFAULT: '#6F4E37',
+                            light: '#8D6E63',
+                        },
+                        nature: '#6B8E23',
+                        gold: '#C9A24D',
+                        beige: '#F5F0E6',
+                        cream: '#FFF8E1'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Poppins"', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "url('graos.jpg')",
+                        'texture': "url('https://www.transparenttextures.com/patterns/paper.png')" 
+                    },
+                    
+                    animation: {
+                        'loop-scroll': 'loop-scroll 50s linear infinite',
+                    },
+                    keyframes: {
+                        'loop-scroll': {
+                            from: { transform: 'translateX(0)' },
+                            to: { transform: 'translateX(-100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Animations */
+        body {
+            background-color: #F5F0E6;
+            color: #4E342E;
+        }
+
+        /* Steam Animation */
+        .steam-container {
+            position: relative;
+        }
+        .steam {
+            position: absolute;
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            background-color: #fff;
+            opacity: 0;
+            filter: blur(10px);
+            animation: steamUp 3s infinite linear;
+        }
+        .steam:nth-child(1) { left: 20%; animation-delay: 0.5s; }
+        .steam:nth-child(2) { left: 50%; animation-delay: 1.5s; }
+        .steam:nth-child(3) { left: 80%; animation-delay: 2.5s; }
+
+        @keyframes steamUp {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            50% { opacity: 0.4; }
+            100% { transform: translateY(-40px) scale(1.5); opacity: 0; }
+        }
+
+        /* Scroll Reveal Utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Timeline Line Drawing */
+        .timeline-line {
+            height: 0;
+            transition: height 1.5s ease-out;
+        }
+        .timeline-line.full {
+            height: 100%;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F0E6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4E342E;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B8E23;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 px-6 lg:px-12 bg-transparent text-white">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="font-serif text-2xl lg:text-3xl font-bold tracking-wider text-white drop-shadow-md">
+                <img src="logo.png" alt="Café Morro Vermelho Logo" class="h-10 inline-block mr-2">
+            </a>
+            
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="lg:hidden text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Desktop Menu -->
+            <div class="hidden lg:flex gap-8 items-center text-sm uppercase tracking-widest font-medium">
+                <a href="#sobre" class="hover:text-gold transition-colors">História</a>
+                <a href="#produtos" class="hover:text-gold transition-colors">Produtos</a>
+                <a href="#processo" class="hover:text-gold transition-colors">Processo</a>
+                <a href="#clientes" class="hover:text-gold transition-colors">Clientes</a>
+                <a href="#contato" class="border border-gold text-gold px-6 py-2 rounded-full hover:bg-gold hover:text-coffee-dark transition-all duration-300">Contato</a>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="fixed inset-0 bg-coffee-dark bg-opacity-95 z-40 transform translate-x-full transition-transform duration-300 flex flex-col justify-center items-center gap-8 lg:hidden">
+            <button id="close-menu" class="absolute top-6 right-6 text-3xl text-gold">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <a href="#sobre" class="text-2xl font-serif text-beige hover:text-gold">História</a>
+            <a href="#produtos" class="text-2xl font-serif text-beige hover:text-gold">Produtos</a>
+            <a href="#processo" class="text-2xl font-serif text-beige hover:text-gold">Processo</a>
+            <a href="#clientes" class="text-2xl font-serif text-beige hover:text-gold">Clientes</a>
+            <a href="#contato" class="text-2xl font-serif text-gold border-b-2 border-gold pb-1">Contato</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section (Substituído por Vídeo) -->
+    <header id="hero" class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        
+        <!-- Background Video -->
+        <div class="absolute inset-0 z-0">
+            <img src="hero.png" alt="Café Morro Vermelho" class="w-full h-full object-cover parallax-bg">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-coffee-dark/90"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+            <span class="block text-gold uppercase tracking-[0.3em] mb-4 text-sm md:text-base animate-fade-in-down">Produção Artesanal & Sustentável</span>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-beige font-bold mb-6 leading-tight animate-fade-in-up">
+                Do Campo<br> 
+                <span class="text-gold italic font-normal text-4xl md:text-6xl"> para a sua Mesa</span>
+            </h1>
+            <p class="text-gray-200 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light">
+                Café especial, mel puro e própolis da nossa terra. Uma experiência sensorial que conecta você à natureza.
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <a href="#produtos" class="bg-gold text-coffee-dark px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-white hover:scale-105 transition-all shadow-lg w-full md:w-auto">
+                    Conheça nossos produtos
+                </a>
+                <a href="#sobre" class="border border-white text-white px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-white/10 transition-all w-full md:w-auto">
+                    Nossa História
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+            <a href="#sobre" class="flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity">
+                <span class="text-xs uppercase tracking-widest mb-2">Descubra</span>
+                <i class="fa-solid fa-chevron-down text-xl"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Sobre o Produtor -->
+    <section id="sobre" class="py-20 lg:py-32 px-6 bg-beige relative overflow-hidden">
+        <!-- Decorative bg leaf -->
+        <i class="fa-solid fa-leaf text-nature opacity-5 absolute -right-20 top-20 text-[20rem]"></i>
+
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="relative reveal order-2 lg:order-1">
+                <div class="absolute -top-4 -left-4 w-full h-full border-2 border-gold rounded-lg z-0"></div>
+                <img src="produtor.png" alt="Produtor de Café" class="relative z-10 w-full h-[500px] object-cover rounded-lg shadow-2xl transition-all duration-700">
+                <div class="absolute bottom-10 right-10 bg-white p-4 shadow-lg z-20 rounded-md">
+                    <p class="font-serif text-coffee-dark text-xl italic">"Café é memória, <br>é família."</p>
+                </div>
+            </div>
+            
+            <div class="reveal order-1 lg:order-2">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="h-[2px] w-12 bg-gold"></div>
+                    <span class="text-coffee-light uppercase tracking-widest font-bold text-sm">Nossa História</span>
+                </div>
+                <h2 class="font-serif text-4xl lg:text-5xl text-coffee-dark font-bold mb-8">Tradição cultivada com as mãos e o coração.</h2>
+                
+                <!-- Parágrafos corrigidos: alinhamento e destaques -->
+                <p class="text-gray-600 leading-relaxed mb-4 text-lg text-justify">
+                    No alto do <strong class="text-coffee-dark">Morro Vermelho</strong>, onde o ar é puro e a terra é fértil, nossa família cultiva muito mais do que café. Cultivamos tradição. 
+                </p>
+                
+                <p class="text-gray-600 leading-relaxed mb-4 text-justify">
+                    Em meio às montanhas da região, nasce uma história marcada por trabalho e visão empreendedora. A <strong class="text-coffee-dark text-lg">Fazenda Luciana</strong> tem suas raízes na herança deixada pelos avós <span class="font-semibold text-coffee">Leonita e Antônio Moraes</span>, que confiaram à família um legado de terras férteis e cheias de potencial. Nestas terras, vimos a oportunidade de cultivar mais do que um produto, mas uma paixão nacional que é o café.
+                </p>
+                
+                <p class="text-gray-600 leading-relaxed mb-4 text-justify">
+                    Com conhecimento da região e espírito empreendedor, a família identificou no clima e no solo as condições ideais para dar início a esse novo capítulo. A experiência prévia com a produção e comercialização de <strong class="text-gold">derivados do mel</strong>, já reconhecidos em toda Caeté e região, trouxe a base necessária para expandir os horizontes. Foi assim que, por volta de 2016, começaram os primeiros plantios de café na propriedade.
+                </p>
+
+                <p class="text-gray-600 leading-relaxed mb-4 text-justify">
+                    Com dedicação e cuidado em cada etapa, a produção evoluiu rapidamente, alcançando colheitas expressivas e consolidando-se em larga escala. Hoje, o <strong class="text-coffee-dark font-serif text-xl">Café Morro Vermelho</strong> é motivo de orgulho para a família: um <strong class="text-nature">café tipicamente natural e orgânico</strong>, produzido por métodos artesanais que preservam a essência e o sabor autêntico do grão.
+                </p>
+
+                <p class="text-gray-600 leading-relaxed mb-8 text-justify">
+                    O reconhecimento do público é o que impulsiona a família a seguir cultivando qualidade e tradição. O Café Morro Vermelho, assim como os produtos derivados do mel, já está presente em diversas cidades da região, como <span class="italic font-medium">Nova Lima, Rio Acima, Belo Horizonte (Belvedere e Jardim Canadá), Nova União, Nova Aparecida e Raposos</span>.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-6 mt-8">
+                    <div class="flex flex-col items-start">
+                        <i class="fa-solid fa-mountain-sun text-3xl text-nature mb-3"></i>
+                        <h4 class="font-serif font-bold text-coffee-dark">Altitude Ideal</h4>
+                        <p class="text-sm text-gray-500">Sabor mais complexo e acidez equilibrada.</p>
+                    </div>
+                    <div class="flex flex-col items-start">
+                        <i class="fa-solid fa-hands-holding-circle text-3xl text-nature mb-3"></i>
+                        <h4 class="font-serif font-bold text-coffee-dark">Colheita Manual</h4>
+                        <p class="text-sm text-gray-500">Seleção rigorosa apenas dos grãos maduros.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nossos Produtos -->
+    <section id="produtos" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-serif text-4xl lg:text-5xl text-coffee-dark font-bold mb-4">Nossos Tesouros</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto">Produtos naturais, sem aditivos, feitos com respeito à terra.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card Café -->
+                <div class="group relative bg-beige rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal card-product cursor-pointer">
+                    <div class="h-64 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all z-10"></div>
+                        <img src="cafemorro.png" alt="Café Especial" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="steam-container absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="steam"></div>
+                            <div class="steam"></div>
+                        </div>
+                    </div>
+                    <div class="p-8 text-center relative">
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-coffee-dark text-white w-16 h-16 flex items-center justify-center rounded-full shadow-md z-20">
+                            <i class="fa-solid fa-mug-hot text-2xl"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold text-coffee-dark mt-6 mb-2">Café Especial</h3>
+                        <p class="text-gray-600 text-sm mb-4">Torra média equilibrada com notas de caramelo e chocolate.</p>
+                        <div class="flex justify-center gap-2 mb-6">
+                            <span class="text-xs bg-white px-3 py-1 rounded-full text-coffee border border-coffee-light">Moído</span>
+                        </div>
+                        <span class="text-gold font-bold uppercase text-sm group-hover:underline">Saiba Mais</span>
+                    </div>
+                </div>
+
+                <!-- Card Mel -->
+                <div class="group bg-beige rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal card-product cursor-pointer" style="transition-delay: 200ms;">
+                    <div class="h-64 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all z-10"></div>
+                        <img src="honey.png" alt="Mel Artesanal" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8 text-center relative">
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gold text-white w-16 h-16 flex items-center justify-center rounded-full shadow-md z-20">
+                            <i class="fa-solid fa-jar text-2xl"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold text-coffee-dark mt-6 mb-2">Mel Silvestre</h3>
+                        <p class="text-gray-600 text-sm mb-4">Mel puro de florada silvestre, colhido nas matas da fazenda, disponível em embagens de vários tamanhos.</p>
+                        <ul class="text-xs text-gray-500 space-y-1 mb-6">
+                            <li><i class="fa-solid fa-check text-nature mr-1"></i> 100% Natural</li>
+                            <li><i class="fa-solid fa-check text-nature mr-1"></i> Sem conservantes</li>
+                        </ul>
+                        <span class="text-gold font-bold uppercase text-sm group-hover:underline">Saiba Mais</span>
+                    </div>
+                </div>
+
+                <!-- Card Própolis -->
+                <div class="group bg-beige rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 reveal card-product cursor-pointer" style="transition-delay: 400ms;">
+                    <div class="h-64 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all z-10"></div>
+                        <img src="propolis.png" alt="Extrato de Própolis" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8 text-center relative">
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-nature text-white w-16 h-16 flex items-center justify-center rounded-full shadow-md z-20">
+                            <i class="fa-solid fa-droplet text-2xl"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl font-bold text-coffee-dark mt-6 mb-2">Própolis Verde</h3>
+                        <p class="text-gray-600 text-sm mb-4">Alta concentração e pureza para fortalecer sua imunidade.</p>
+                        <div class="flex justify-center gap-2 mb-6">
+                            <span class="text-xs bg-white px-3 py-1 rounded-full text-nature border border-nature">Imunidade</span>
+                            <span class="text-xs bg-white px-3 py-1 rounded-full text-nature border border-nature">Saúde</span>
+                        </div>
+                        <span class="text-gold font-bold uppercase text-sm group-hover:underline">Saiba Mais</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diferenciais (Highlight) -->
+    <section class="py-16 bg-coffee-dark text-beige">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-white/10">
+                <div class="reveal p-4">
+                    <i class="fa-solid fa-seedling text-4xl text-nature mb-4"></i>
+                    <h3 class="font-serif text-xl font-bold mb-2">Sustentável</h3>
+                    <p class="text-sm opacity-80">Respeito total à natureza</p>
+                </div>
+                <div class="reveal p-4" style="transition-delay: 100ms;">
+                    <i class="fa-solid fa-location-dot text-4xl text-gold mb-4"></i>
+                    <h3 class="font-serif text-xl font-bold mb-2">Local</h3>
+                    <p class="text-sm opacity-80">Produção 100% no Morro Vermelho</p>
+                </div>
+                <div class="reveal p-4" style="transition-delay: 200ms;">
+                    <i class="fa-solid fa-fire-burner text-4xl text-orange-400 mb-4"></i>
+                    <h3 class="font-serif text-xl font-bold mb-2">Torra Fresca</h3>
+                    <p class="text-sm opacity-80">Lotes pequenos e controlados</p>
+                </div>
+                <div class="reveal p-4" style="transition-delay: 300ms;">
+                    <i class="fa-solid fa-award text-4xl text-yellow-500 mb-4"></i>
+                    <h3 class="font-serif text-xl font-bold mb-2">Qualidade</h3>
+                    <p class="text-sm opacity-80">Seleção Premium</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processo de Produção (Timeline) -->
+    <section id="processo" class="py-24 bg-beige overflow-hidden">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <span class="text-coffee-light uppercase tracking-widest font-bold text-sm">Do grão à xícara</span>
+                <h2 class="font-serif text-4xl lg:text-5xl text-coffee-dark font-bold mt-2">Processo Artesanal</h2>
+            </div>
+
+            <div class="relative">
+                <!-- Vertical Line -->
+                <div class="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 top-0 bottom-0 w-1 bg-gray-300 z-0">
+                    <div id="timeline-progress" class="w-full bg-gold timeline-line"></div>
+                </div>
+
+                <!-- Steps -->
+                <div class="space-y-12">
+                    <!-- Step 1 -->
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between timeline-step">
+                        <div class="md:w-5/12 text-left md:text-right order-2 md:order-1 pl-12 md:pl-0 pr-0 md:pr-10 reveal">
+                            <h3 class="font-serif text-2xl font-bold text-coffee-dark">1. Plantio e Cuidado</h3>
+                            <p class="text-gray-600 mt-2">Cultivamos nossas plantas em harmonia com a floresta nativa, sem agrotóxicos pesados.</p>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-coffee-dark rounded-full border-4 border-gold flex items-center justify-center order-1 md:order-2">
+                            <span class="text-white text-xs font-bold">1</span>
+                        </div>
+                        <div class="md:w-5/12 order-3 pl-12 md:pl-10 reveal">
+                            <i class="fa-solid fa-seedling text-4xl text-nature/40"></i>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between timeline-step">
+                        <div class="md:w-5/12 order-3 md:order-1 pl-12 md:pl-0 pr-0 md:pr-10 text-right hidden md:block reveal">
+                             <i class="fa-solid fa-signing text-4xl text-gold/40"></i>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-coffee-dark rounded-full border-4 border-gold flex items-center justify-center order-1 md:order-2">
+                             <span class="text-white text-xs font-bold">2</span>
+                        </div>
+                        <div class="md:w-5/12 text-left order-2 md:order-3 pl-12 md:pl-10 reveal">
+                            <h3 class="font-serif text-2xl font-bold text-coffee-dark">2. Colheita Manual</h3>
+                            <p class="text-gray-600 mt-2">Colhemos grão a grão (colheita seletiva), garantindo que apenas os frutos maduros (cereja) entrem na sua xícara.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between timeline-step">
+                        <div class="md:w-5/12 text-left md:text-right order-2 md:order-1 pl-12 md:pl-0 pr-0 md:pr-10 reveal">
+                            <h3 class="font-serif text-2xl font-bold text-coffee-dark">3. Secagem ao Sol</h3>
+                            <p class="text-gray-600 mt-2">Os grãos secam naturalmente em terreiros suspensos, preservando a doçura e os aromas.</p>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-coffee-dark rounded-full border-4 border-gold flex items-center justify-center order-1 md:order-2">
+                             <span class="text-white text-xs font-bold">3</span>
+                        </div>
+                        <div class="md:w-5/12 order-3 pl-12 md:pl-10 reveal">
+                            <i class="fa-solid fa-sun text-4xl text-orange-400/40"></i>
+                        </div>
+                    </div>
+
+                     <!-- Step 4 -->
+                     <div class="relative z-10 flex flex-col md:flex-row items-center justify-between timeline-step">
+                        <div class="md:w-5/12 order-3 md:order-1 pl-12 md:pl-0 pr-0 md:pr-10 text-right hidden md:block reveal">
+                             <i class="fa-solid fa-fire text-4xl text-red-400/40"></i>
+                        </div>
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-coffee-dark rounded-full border-4 border-gold flex items-center justify-center order-1 md:order-2">
+                             <span class="text-white text-xs font-bold">4</span>
+                        </div>
+                        <div class="md:w-5/12 text-left order-2 md:order-3 pl-12 md:pl-10 reveal">
+                            <h3 class="font-serif text-2xl font-bold text-coffee-dark">4. Torra Artesanal</h3>
+                            <p class="text-gray-600 mt-2">Torramos em pequenos lotes para ressaltar as melhores características sensoriais de cada safra.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="clientes" class="py-16 bg-white border-t border-gray-100 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-10 reveal">
+                <span class="text-coffee-light uppercase tracking-widest font-bold text-sm">Nossa Rede</span>
+                <h2 class="font-serif text-3xl lg:text-4xl text-coffee-dark font-bold mt-2">Quem já confia em nós</h2>
+                <p class="text-gray-500 mt-2">Lojas, empórios e cafeterias parceiras na região</p>
+            </div>
+            
+            <!-- Carrossel Infinito Corrigido -->
+            <div class="flex overflow-hidden group">
+                <!-- Para evitar buracos, travamos o tamanho com w-max e flex-shrink-0 e triplicamos os itens dentro da mesma div -->
+                <div class="flex space-x-12 animate-loop-scroll pr-12 items-center flex-shrink-0 w-max">
+                    <!-- Set 1 -->
+                    <img src="logoAritana.png" alt="Cliente 1" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoabc.png" alt="Cliente 2" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logobonna.png" alt="Cliente 3" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoinet.png" alt="Cliente 4" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <!-- Set 2 (Garante preenchimento da tela inteira antes do reset) -->
+                    <img src="logoAritana.png" alt="Cliente 1" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoabc.png" alt="Cliente 2" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logobonna.png" alt="Cliente 3" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoinet.png" alt="Cliente 4" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <!-- Set 3 -->
+                    <img src="logoAritana.png" alt="Cliente 1" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoabc.png" alt="Cliente 2" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logobonna.png" alt="Cliente 3" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoinet.png" alt="Cliente 4" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                </div>
+                
+                <!-- Div IDÊNTICA duplicada (Exigência para o scroll infinito funcionar corretamente) -->
+                <div class="flex space-x-12 animate-loop-scroll pr-12 items-center flex-shrink-0 w-max" aria-hidden="true">
+                    <!-- Set 1 -->
+                    <img src="logoAritana.png" alt="Cliente 1" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoabc.png" alt="Cliente 2" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logobonna.png" alt="Cliente 3" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoinet.png" alt="Cliente 4" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <!-- Set 2 -->
+                    <img src="logoAritana.png" alt="Cliente 1" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoabc.png" alt="Cliente 2" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logobonna.png" alt="Cliente 3" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoinet.png" alt="Cliente 4" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <!-- Set 3 -->
+                    <img src="logoAritana.png" alt="Cliente 1" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoabc.png" alt="Cliente 2" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logobonna.png" alt="Cliente 3" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                    <img src="logoinet.png" alt="Cliente 4" class="h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100 cursor-pointer">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeria Sensorial -->
+    <section id="galeria" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6 mb-12 flex justify-between items-end">
+            <div class="reveal">
+                <h2 class="font-serif text-4xl text-coffee-dark font-bold">Galeria Sensorial</h2>
+                <p class="text-gray-500">Um pouco do nosso dia a dia</p>
+            </div>
+            <div class="hidden md:block">
+                <i class="fa-solid fa-camera text-gold text-2xl"></i>
+            </div>
+        </div>
+        
+        <!-- Masonry-ish Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 max-w-7xl mx-auto px-6 h-[600px] md:h-[500px]">
+            <!-- Item 1 (Large) -->
+            <div class="col-span-2 row-span-2 relative group overflow-hidden rounded-lg cursor-pointer reveal" onclick="openLightbox(this)">
+                <img src="graos.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Xícara de Café">
+                <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-white text-3xl"></i>
+                </div>
+            </div>
+            <!-- Item 2 -->
+            <div class="col-span-1 row-span-1 relative group overflow-hidden rounded-lg cursor-pointer reveal" style="transition-delay: 100ms;" onclick="openLightbox(this)">
+                <img src="publicofee.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Grãos Torrando">
+                 <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-white text-2xl"></i>
+                </div>
+            </div>
+            <!-- Item 3 -->
+            <div class="col-span-1 row-span-2 relative group overflow-hidden rounded-lg cursor-pointer reveal" style="transition-delay: 200ms;" onclick="openLightbox(this)">
+                <img src="melpubli.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Favos de Mel">
+                 <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-white text-2xl"></i>
+                </div>
+            </div>
+            <!-- Item 4 -->
+            <div class="col-span-1 row-span-1 relative group overflow-hidden rounded-lg cursor-pointer reveal" style="transition-delay: 300ms;" onclick="openLightbox(this)">
+                <img src="fazenda.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Natureza Morro">
+                 <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-white text-2xl"></i>
+                </div>
+            </div>
+            <!-- Item 5 -->
+            <div class="col-span-1 row-span-2 relative group overflow-hidden rounded-lg cursor-pointer reveal" style="transition-delay: 400ms;" onclick="openLightbox(this)">
+                <img src="Paisagem.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Natureza Morro">
+                 <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-white text-2xl"></i>
+                </div>
+            </div>
+            <!-- Item 6 -->
+            <div class="col-span-1 row-span-1 relative group overflow-hidden rounded-lg cursor-pointer reveal" style="transition-delay: 500ms;" onclick="openLightbox(this)">
+                <img src="cafemaduro.png" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Natureza Morro">
+                 <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-white text-2xl"></i>
+                </div>
+            </div>
+
+            <!-- Item 7 -->
+            <div class="col-span-1 row-span-1 relative group overflow-hidden rounded-lg cursor-pointer reveal" style="transition-delay: 600ms;" onclick="openLightbox(this)">
+                <img src="graosverdes.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Natureza Morro">
+                 <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <i class="fa-solid fa-magnifying-glass-plus text-white text-2xl"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="py-24 relative bg-coffee-dark text-white overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="font-serif text-4xl lg:text-5xl font-bold mb-4">Vamos conversar?</h2>
+                <p class="text-beige/80 text-lg max-w-2xl mx-auto">
+                    Seja para levar o Café Morro Vermelho para sua casa ou para o seu negócio, estamos prontos para atender você.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Coluna da Esquerda: Texto B2B + Info -->
+                <div class="reveal order-2 lg:order-1 text-center lg:text-left">
+                    <div class="mb-10">
+                        <h3 class="font-serif text-2xl text-gold mb-4 font-bold">Para Empresas e Revendedores</h3>
+                        <p class="text-gray-300 leading-relaxed mb-6">
+                            Quer oferecer um produto artesanal, de alta qualidade e com história para seus clientes? Temos condições especiais para:
+                        </p>
+                        <ul class="space-y-3 text-left inline-block lg:block">
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-store text-nature"></i>
+                                <span>Mercados e Empórios</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-mug-hot text-nature"></i>
+                                <span>Cafeterias e Padarias</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <i class="fa-solid fa-briefcase text-nature"></i>
+                                <span>Presentes Corporativos</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-col gap-4 items-center lg:items-start">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-gold">
+                                <i class="fa-brands fa-instagram text-xl"></i>
+                            </div>
+                            <div class="text-left">
+                                <span class="block text-xs uppercase opacity-60">Siga nossa rotina</span>
+                                <a href="https://www.instagram.com/cafe.morrovermelho?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="hover:text-gold transition-colors font-medium">@cafe.morrovermelho</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-gold">
+                                <i class="fa-solid fa-location-dot text-xl"></i>
+                            </div>
+                            <div class="text-left">
+                                <span class="block text-xs uppercase opacity-60">Nossa Origem</span>
+                                <span class="font-medium">Caeté, Minas Gerais</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna da Direita: Formulário Dinâmico -->
+                <div class="order-1 lg:order-2">
+                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-2xl shadow-2xl reveal">
+                        <form id="whatsapp-form" class="space-y-6">
+                            <!-- Nome -->
+                            <div>
+                                <label for="name" class="block text-xs font-bold text-gold uppercase tracking-widest mb-2">Seu Nome ou Empresa</label>
+                                <input type="text" id="name" required class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all" placeholder="Ex: João Silva ou Empório Mineiro">
+                            </div>
+
+                            <!-- Interesse (Radio Cards) -->
+                            <div>
+                                <label class="block text-xs font-bold text-gold uppercase tracking-widest mb-3">Qual seu objetivo?</label>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <label class="cursor-pointer relative">
+                                        <input type="radio" name="interest" value="Consumo Próprio" class="peer sr-only" checked>
+                                        <div class="px-4 py-3 rounded-lg border border-white/10 bg-black/20 text-white peer-checked:bg-gold peer-checked:text-coffee-dark peer-checked:font-bold peer-checked:border-gold transition-all hover:bg-white/5 flex items-center gap-2">
+                                            <i class="fa-solid fa-user"></i> Consumo Próprio
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer relative">
+                                        <input type="radio" name="interest" value="Revenda / B2B" class="peer sr-only">
+                                        <div class="px-4 py-3 rounded-lg border border-white/10 bg-black/20 text-white peer-checked:bg-gold peer-checked:text-coffee-dark peer-checked:font-bold peer-checked:border-gold transition-all hover:bg-white/5 flex items-center gap-2">
+                                            <i class="fa-solid fa-shop"></i> Revenda / B2B
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer relative">
+                                        <input type="radio" name="interest" value="Parceria Corporativa" class="peer sr-only">
+                                        <div class="px-4 py-3 rounded-lg border border-white/10 bg-black/20 text-white peer-checked:bg-gold peer-checked:text-coffee-dark peer-checked:font-bold peer-checked:border-gold transition-all hover:bg-white/5 flex items-center gap-2">
+                                            <i class="fa-solid fa-handshake"></i> Parceria Corp.
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer relative">
+                                        <input type="radio" name="interest" value="Dúvidas" class="peer sr-only">
+                                        <div class="px-4 py-3 rounded-lg border border-white/10 bg-black/20 text-white peer-checked:bg-gold peer-checked:text-coffee-dark peer-checked:font-bold peer-checked:border-gold transition-all hover:bg-white/5 flex items-center gap-2">
+                                            <i class="fa-solid fa-map-pin"></i> Dúvidas
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Mensagem Opcional -->
+                            <div>
+                                <label for="message" class="block text-xs font-bold text-gold uppercase tracking-widest mb-2">Mensagem Adicional (Opcional)</label>
+                                <textarea id="message" rows="3" class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-all" placeholder="Gostaria de saber preços..."></textarea>
+                            </div>
+
+                            <!-- Botão Submit -->
+                            <button type="submit" class="w-full group bg-nature hover:bg-green-600 text-white font-bold py-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-3">
+                                <i class="fa-brands fa-whatsapp text-2xl group-hover:scale-110 transition-transform"></i>
+                                <span>Iniciar Conversa no WhatsApp</span>
+                            </button>
+                            <p class="text-center text-xs opacity-50 mt-2"><i class="fa-solid fa-lock mr-1"></i> Você será direcionado para o contato ideal</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-coffee-dark border-t border-white/10 py-8 text-beige">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left flex-1">
+                <a href="#" class="font-serif text-xl font-bold tracking-wider text-white">
+                    <i class="fa-solid fa-mug-hot mr-2"></i>Café Morro Vermelho
+                </a>
+            </div>
+
+            <div class="text-center flex-1">
+                <p class="text-gray-100 text-sm">
+                    &copy; 2026 Todos os direitos reservados
+                </p>
+            </div>
+
+            <div class="text-center md:text-right flex-1">
+                <p class="text-gray-100 text-sm">
+                    Desenvolvido por 
+                    <a href="https://www.techdias.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-gray-200 hover:underline hover:text-gold transition-colors">Fernando Dias</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/5531977777860" target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 z-40 w-16 h-16 flex items-center justify-center animate-bounce">
+        <i class="fab fa-whatsapp fa-2x"></i>
+    </a>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
+        <button id="lightbox-close" class="absolute top-6 right-6 text-white text-4xl hover:text-gold transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="Zoom" class="max-w-[90%] max-h-[90vh] object-contain rounded-md shadow-2xl">
+    </div>
+
+     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Navbar Scroll Effect
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-coffee-dark', 'shadow-lg', 'py-2');
+                    navbar.classList.remove('bg-transparent', 'py-4');
+                } else {
+                    navbar.classList.remove('bg-coffee-dark', 'shadow-lg', 'py-2');
+                    navbar.classList.add('bg-transparent', 'py-4');
+                }
+            });
+
+            // Mobile Menu Toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const closeMenu = document.getElementById('close-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+
+            function toggleMenu() {
+                const isHidden = mobileMenu.classList.contains('translate-x-full');
+                if (isHidden) {
+                    mobileMenu.classList.remove('translate-x-full');
+                } else {
+                    mobileMenu.classList.add('translate-x-full');
+                }
+            }
+
+            menuBtn.addEventListener('click', toggleMenu);
+            closeMenu.addEventListener('click', toggleMenu);
+            mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+            // Scroll Reveal Animation (Intersection Observer)
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // Timeline Animation
+            const timelineSection = document.getElementById('processo');
+            const timelineLine = document.getElementById('timeline-progress');
+            
+            const timelineObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    timelineLine.classList.add('full');
+                }
+            }, { threshold: 0.2 });
+            
+            if(timelineSection) timelineObserver.observe(timelineSection);
+
+            // ==========================================
+            // LÓGICA DE ROTEAMENTO DO WHATSAPP (NOVA)
+            // ==========================================
+            const form = document.getElementById('whatsapp-form');
+            if(form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('name').value;
+                    const interestRadio = document.querySelector('input[name="interest"]:checked');
+                    const interest = interestRadio ? interestRadio.value : 'Dúvidas';
+                    const message = document.getElementById('message').value;
+                    
+                    // -- Definição dos Números --
+                    // Substitua pelos números reais (apenas números, com DDI + DDD)
+                    const numeroRepresentante = "5531977777860"; 
+                    const numeroDono = "5531988888888"; // COLOQUE O NÚMERO DO DONO AQUI
+                    
+                    let targetNumber = numeroRepresentante; // Padrão
+                    
+                    // Lógica Condicional
+                    if (interest === 'Revenda / B2B' || interest === 'Parceria Corporativa') {
+                        targetNumber = numeroDono;
+                    } else if (interest === 'Consumo Próprio' || interest === 'Dúvidas') {
+                        targetNumber = numeroRepresentante;
+                    }
+                    
+                    // Monta a mensagem baseada no tipo de interesse
+                    let text = `Olá! Me chamo *${name}*.\n`;
+                    
+                    if (interest === 'Revenda / B2B' || interest === 'Parceria Corporativa') {
+                        text += `Tenho interesse comercial em: *${interest}*.\n`;
+                        text += `Gostaria de saber sobre condições para atacado/parceria.\n`;
+                    } else if (interest === 'Dúvidas') {
+                        text += `Gostaria de tirar algumas dúvidas sobre os produtos *Morro Vermelho*.\n`;
+                    } else {
+                        text += `Tenho interesse em: *${interest}*.\n`;
+                    }
+                    
+                    if(message) {
+                        text += `\n*Mensagem adicional:* ${message}`;
+                    }
+                    
+                    const encodedText = encodeURIComponent(text);
+                    window.open(`https://wa.me/${targetNumber}?text=${encodedText}`, '_blank');
+                });
+            }
+        });
+
+        // Lightbox Logic
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
+
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            lightboxImg.src = img.src;
+            lightbox.classList.remove('hidden');
+            // Small timeout to allow display:block to apply before changing opacity
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+            }, 300);
+        });
+
+        // Close on background click
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightboxClose.click();
+            }
+        });
+    </script>
+</body>
+</html>
